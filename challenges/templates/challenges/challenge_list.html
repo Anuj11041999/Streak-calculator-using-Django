@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+{% extends "challenges/challenge_base.html" %}
+{% block prechallenge %}
+<section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Welcome</h1>
+      {% if user.is_authenticated %}
+        <p class="lead text-muted">All challenges are listed here to view your challenge click on My challenges<p>
+        <a href="{% url 'challenges:my' %}" class="btn btn-primary my-2">My Challenges</a>
+      {% else %}
+      <p class="lead text-muted">Please Login to Start Earning<p>
+        <a href="{% url 'challenges:login' %}" class="btn btn-primary my-2">Login</a>
+        {% endif %}
+      </p>
+    </div>
+  </section>
+
+    {% if user.is_authenticated %}
+    <div class="container"><a href="{% url 'challenges:create' %}" class="btn btn-md btn-fill btn-warning">
+        <span class="glyphicon glyphicon-plus-sign">Create New challenge</span></a>
+        <a href="{% url 'challenges:completed' %}" class="btn btn-md btn-fill btn-warning">
+            <span class="glyphicon glyphicon-plus-sign">Completed Challenges</span></a>
+            <a href="{% url 'challenges:all' %}" class="btn btn-md btn-fill btn-warning">
+                <span class="glyphicon glyphicon-plus-sign">All Challenges</span></a>    
+    </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block challenge_content %}
+
+<main role="main">
+  <div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            {% for challenge in object_list %}
+            <div class="col-md-12">
+              <div class="card mb-4">
+                <div class="card-body">
+                    <a href="{% url 'challenges:single' slug=challenge.slug %}" class="card-text">
+                        <h4 class="title list-group-item-heading">{{challenge.name}}</h4></a>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{challenge.description}}
+                        </div>
+                        {% load static %}
+                        {% if user|complete_check:challenge.memberships.all %}
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-outline-secondary">Already Completed</button>
+                          </div>
+                        {% else %}
+                        {% if user|custom_check:challenge.memberships.all %}
+                        {% for membership in challenge.memberships.all %}
+                        
+                        {% if user == membership.user %}
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-outline-secondary">Streak: {{membership.streak}}</button>
+                          </div>
+                        {% endif %}
+                        {% endfor %}
+                        <a href="{% url 'challenges:add' slug=challenge.slug %}" class="btn btn-simple bt-fill btn-warning">
+                            <span class="'glyphicon glyphicon-remove-circle"></span>Do for today</a>
+                        
+                        {% endif %}
+                        {% endif %}
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+    </div>
+  </div>
+</div>
+</main>
+{% endblock %}

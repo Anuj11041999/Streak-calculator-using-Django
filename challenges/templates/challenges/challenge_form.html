@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+{% extends "challenges/challenge_base.html" %}
+{% load bootstrap3 %}
+{% block challenge_content %}
+<h4>Create a new challenge</h4>
+    <form action="{% url 'challenges:create' %}" method="post" id="challengeForm">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" value="Create" class="btn btn-primary btn-large">
+    </form>
+{% endblock %}

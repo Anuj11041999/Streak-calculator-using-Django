@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+{% extends "challenges/challenge_base.html" %}
+{% block prechallenge %}
+<h1>{{challenge.name}}</h1>
+<h2>This challenge will include you to {{challenge.description}}</h2>
+
+<div class="content">
+    {% load static %}
+    {% if user|complete_check:challenge.memberships.all %}
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary btn-outline-secondary">Already Completed</button>
+      </div>
+    {% else %}
+    {% if user|custom_check:challenge.memberships.all %}
+    {% for membership in challenge.memberships.all %}
+    
+    {% if user == membership.user %}
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary btn-outline-secondary">Streak: {{membership.streak}}</button>
+      </div>
+    {% endif %}
+    {% endfor %}
+    <a href="{% url 'challenges:add' slug=challenge.slug %}" class="btn btn-simple bt-fill btn-warning">
+        <span class="'glyphicon glyphicon-remove-circle"></span>Do for today</a>
+    
+    <a href="{% url 'challenges:leave' slug=challenge.slug %}" class="btn btn-lg bt-fill btn-warning">
+    <span class="'glyphicon glyphicon-remove-circle"></span>Leave</a>
+
+    {% else %}
+    <a href="{% url 'challenges:join' slug=challenge.slug %}" class="btn btn-lg bt-fill btn-warning">
+        <span class="'glyphicon glyphicon-ok-circle"></span>Join</a>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
+
