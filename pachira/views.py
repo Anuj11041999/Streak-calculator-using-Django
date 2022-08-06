@@ -7,4 +7,5 @@ class TestPage(TemplateView):
     template_name = 'test.html'
 
 class ThanksPage(TemplateView):
-    template_name = 'thanks.html'  
+    template_name = 'thanks.html'
+class
